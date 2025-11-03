@@ -36,9 +36,7 @@ public class BookService {
 
     BookEntity entity = bookMapper.toEntity(request);
     entity.setCategory(category);
-
-    bookRepository.save(entity);
-    return bookMapper.toResponse(entity);
+    return bookMapper.toResponse(bookRepository.save(entity));
   }
 
   /**
@@ -88,9 +86,7 @@ public class BookService {
           .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + request.getCategoryId()));
       entity.setCategory(category);
     }
-
-    bookRepository.save(entity);
-    return bookMapper.toResponse(entity);
+    return bookMapper.toResponse(bookRepository.save(entity));
   }
 
   /**

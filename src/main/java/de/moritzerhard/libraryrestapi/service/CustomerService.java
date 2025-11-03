@@ -36,9 +36,7 @@ public class CustomerService {
 
     CustomerEntity entity = customerMapper.toEntity(request);
     entity.setPassword(passwordEncoder.encode(request.getPassword()));
-    customerRepository.save(entity);
-
-    return customerMapper.toResponse(entity);
+    return customerMapper.toResponse(customerRepository.save(entity));
   }
 
   /**
@@ -71,9 +69,7 @@ public class CustomerService {
     if (request.getPassword() != null && !request.getPassword().isBlank()) {
       entity.setPassword(passwordEncoder.encode(request.getPassword()));
     }
-
-    customerRepository.save(entity);
-    return customerMapper.toResponse(entity);
+    return customerMapper.toResponse(customerRepository.save(entity));
   }
 
   /**
@@ -83,8 +79,9 @@ public class CustomerService {
    * @throws EntityNotFoundException if the customer does not exist
    */
   public void delete(Long id) {
-    customerRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + id));
+    if (!customerRepository.existsById(id)) {
+      throw new EntityNotFoundException("Customer not found with id: " + id);
+    }
     customerRepository.deleteById(id);
   }
 }
